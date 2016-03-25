@@ -21,4 +21,11 @@ public class Plane {
 	public ArrayList<Vector> getDirections(){
 		return this.directions;
 	}
+	
+	public Vector getNormal(){
+		Vector v0 = this.getDirections().get(0);
+		Vector vs= this.getDirections().remove(0);
+		return v0.crossP(vs);
+	}
+	
 }

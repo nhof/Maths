@@ -13,12 +13,6 @@ public class InvertTool {
 		System.out.print("m-Dimension: ");
 		int m0 = n.nextInt();
 		System.out.println(m0);
-
-		String line = n.nextLine();
-		String[] values = line.split(" +");
-		for (String val : values) {
-			Double v = Double.parseDouble(val);
-		}
 	}
 
 }

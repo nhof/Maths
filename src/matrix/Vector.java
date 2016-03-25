@@ -46,7 +46,7 @@ public class Vector extends Matrix {
 		return v;
 	}
 	
-	public double lengthV(){
+	public double getLength(){
 		int n = this.nDim();
 		double sum = 0;
 		for(int i = 0;i<n;i++){
@@ -55,8 +55,21 @@ public class Vector extends Matrix {
 		return Math.sqrt(sum);
 	}
 	
+	public Vector getNormal(){
+		double l = this.getLength();
+		if(l == 0){System.err.println("this vector is the Nullvector and can't be normed");}
+		int n = this.nDim();
+		Vector v = this;
+		for(int i = 0; i<n ; i++){
+			v.setCoord(i, this.getCoord(i)/l);
+		}
+		return v;
+	}
+	
 	public double angleV(Vector vec){
-		double x = this.skalarP(vec)/(this.lengthV()*vec.lengthV());
+		double x = this.skalarP(vec)/(this.getLength()*vec.getLength());
 		return Math.acos(x);
 	}
+	
+	
 }
