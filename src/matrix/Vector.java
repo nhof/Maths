@@ -3,7 +3,7 @@ package matrix;
 public class Vector extends Matrix {
 
 	public Vector(int nDim) {
-		super(nDim, 0);
+		super(nDim, 1);
 	}
 	
 	public Vector unitVector(int dim, int pos){
@@ -30,7 +30,7 @@ public class Vector extends Matrix {
 	}
 	
 	public double skalarP2(Vector vec){
-		return this.transposed().multiplication(vec).getValue(0, 0);
+		return this.transposed().matMult(vec).getValue(0, 0);
 	}
 	
 	public Vector crossP(Vector...vectors){

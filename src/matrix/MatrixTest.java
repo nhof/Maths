@@ -83,7 +83,7 @@ public class MatrixTest {
 		Matrix m0 = new Matrix(3, 2, 1, 1, 1, 1, 1, 1);
 		Matrix m1 = new Matrix(2, 3, 1, 1, 1, 1, 1, 1);
 		Matrix m2 = new Matrix(3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2);
-		assertTrue("not same", m2.equals(m0.multiplication(m1)));
+		assertTrue("not same", m2.equals(m0.matMult(m1)));
 	}
 
 	@Test

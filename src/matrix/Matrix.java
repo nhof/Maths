@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Matrix {
 	private final List<List<Double>> values;
-
+	
 	public Matrix(int nDim, int mDim) {
 		values = new ArrayList<>(nDim);
 		for (int i = 0; i < nDim; i++) {
@@ -59,6 +59,16 @@ public class Matrix {
 		System.out.println("--------------------------------");
 	}
 
+	public static Matrix unitMatrix(int n, int m) {
+		Matrix newM = new Matrix(n, m);
+		int k = Math.min(n, m);
+		for (int i = 0; i < k; i++) {
+			newM.setValue(i, i, 1);
+		}
+		return newM;
+	}
+	
+
 	public double getValue(int n, int m) {
 		return this.values.get(n).get(m);
 	}
@@ -99,7 +109,7 @@ public class Matrix {
 		return this.values.get(0).size();
 	}
 
-	public Matrix multiplication(Matrix otherM) {
+	public Matrix matMult(Matrix otherM) {
 		int n = this.nDim();
 		int m = this.mDim();
 		int mo = otherM.values.size();
@@ -210,14 +220,6 @@ public class Matrix {
 		return newM;
 	}
 
-	public static Matrix unitMatrix(int n, int m) {
-		Matrix newM = new Matrix(n, m);
-		int k = Math.min(n, m);
-		for (int i = 0; i < k; i++) {
-			newM.setValue(i, i, 1);
-		}
-		return newM;
-	}
 
 	public Matrix multiplyRow(int n, double factor) {
 		int m = this.mDim();
@@ -324,12 +326,13 @@ public class Matrix {
 	}
 
 	public Matrix invert() {
-		int n = this.nDim();
-		if (this.det() == 0) {
-			System.err.println("This Matrix can't be inverted");
-		}
-		Matrix solver = this.extendColumns(unitMatrix(n, n));
-		return solver.gElimination(solver).returnColumns(n, 2 * n - 1);
+		return MatrixContext.inverse(this);
+		// int n = this.nDim();
+		// if (this.det() == 0) {
+		// System.err.println("This Matrix can't be inverted");
+		// }
+		// Matrix solver = this.extendColumns(unitMatrix(n, n));
+		// return solver.gElimination(solver).returnColumns(n, 2 * n - 1);
 	}
 
 	public Vector lgsSolve(Vector v) {
