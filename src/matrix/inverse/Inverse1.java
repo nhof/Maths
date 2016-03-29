@@ -13,7 +13,7 @@ public class Inverse1 implements IInverse {
 			System.err.println("This Matrix can't be inverted");
 		}
 		Matrix solver = m.extendColumns(Matrix.unitMatrix(n, n));
-		return solver.gElimination(solver).returnColumns(n, 2 * n - 1);
+		return MatrixContext.gElimination(solver).returnColumns(n, 2 * n - 1);
 	}
 
 }

@@ -3,6 +3,7 @@ package matrix;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class MatrixTest {
@@ -55,6 +56,11 @@ public class MatrixTest {
 		ex.setValue(2, 1, 2);
 		ex.setValue(2, 2, -4);
 		return ex;
+	}
+
+	@Before
+	public void setup() {
+		MatrixContext.main();
 	}
 
 	@Test
@@ -142,59 +148,60 @@ public class MatrixTest {
 	}
 
 	@Test
-	public void addRowTest(){
-		Matrix m0 = new Matrix(3,3,0,1,2,3,4,5,6,7,8);
-		Matrix m1 = new Matrix(3,3,0,1,2,3,5,7,6,7,8);
+	public void addRowTest() {
+		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+		Matrix m1 = new Matrix(3, 3, 0, 1, 2, 3, 5, 7, 6, 7, 8);
 		assertTrue("not same", m1.equals(m0.addRow(0, 1)));
 	}
 
 	@Test
-	public void addTimesRowTest(){
-		Matrix m0 = new Matrix(3,3,0,1,2,3,4,5,6,7,8);
-		Matrix m1 = new Matrix(3,3,0,1,2,3,3,3,6,7,8);
+	public void addTimesRowTest() {
+		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+		Matrix m1 = new Matrix(3, 3, 0, 1, 2, 3, 3, 3, 6, 7, 8);
 		assertTrue("not same", m1.equals(m0.addTimesRow(0, 1, -1)));
 	}
-	
+
 	@Test
-	public void switchRowsTest(){
-		Matrix m0 = new Matrix(3,3,0,1,2,3,4,5,6,7,8);
-		Matrix m1 = new Matrix(3,3,3,4,5,0,1,2,6,7,8);
+	public void switchRowsTest() {
+		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+		Matrix m1 = new Matrix(3, 3, 3, 4, 5, 0, 1, 2, 6, 7, 8);
 		assertTrue("not same", m1.equals(m0.switchRows(0, 1)));
 	}
-	
+
 	@Test
-	public void returnRowsTest(){
-		Matrix m0 = new Matrix(3,3,0,1,2,3,4,5,6,7,8);
-		Matrix m1 = new Matrix(1,3,6,7,8);
+	public void returnRowsTest() {
+		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+		Matrix m1 = new Matrix(1, 3, 6, 7, 8);
 		assertTrue("not same", m1.equals(m0.returnRows(2, 2)));
 	}
-	
+
 	@Test
-	public void returnColTest(){
-		Matrix m0 = new Matrix(3,3,0,1,2,3,4,5,6,7,8);
-		Matrix m1 = new Matrix(3,1,2,5,8);
+	public void returnColTest() {
+		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+		Matrix m1 = new Matrix(3, 1, 2, 5, 8);
 		assertTrue("not same", m1.equals(m0.returnColumns(2, 2)));
 	}
-	
-	
+
 	@Test
-	public void nearlyTest(){
-		Matrix m0 = new Matrix(3,3,0,1,2,3,4,5,6,7,8);
-		Matrix m1 = new Matrix(3,3,0,1.001,2.001,3,4,5,6,7,8);
-		assertTrue("should not be same", m1.equals(m0)==false);
-		assertTrue("not same", m1.nearly(m1, 0.1));	
+	public void nearlyTest() {
+		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+		Matrix m1 = new Matrix(3, 3, 0, 1.001, 2.001, 3, 4, 5, 6, 7, 8);
+		assertTrue("should not be same", m1.equals(m0) == false);
+		assertTrue("not same", m1.nearly(m1, 0.1));
 	}
-	
+
 	@Test
 	public void invertTest() {
 		Matrix m0 = new Matrix(3, 3, 2, -1, 3, 7, 3, 0, -1, 2, -4);
-		Matrix m1 = new Matrix(3,3,12,-2,9,-28,5,-21,-17,3,-13);
-		assertTrue("not same", m1.nearly(m0.invert(),0.1));
+		Matrix m1 = new Matrix(3, 3, 12, -2, 9, -28, 5, -21, -17, 3, -13);
+		System.out.println(m0.invert());
+		System.out.println(m1);
+		assertTrue("not same", m1.nearly(m0.invert(), 0.1));
 	}
-	
+
 	@Test
-	public void invertingExample(){
-		Matrix m0 = new Matrix(4,4,0,0,1,0,0,-1,0,-3,1,2,0,6,0,0,0,1);
-		System.out.println(m0.invert());		
+	public void invertingExample() {
+		Matrix m0 = new Matrix(4, 4, 0, 0, 1, 0, 0, -1, 0, -3, 1, 2, 0, 6, 0, 0, 0, 1);
+		System.out.println(m0.invert());
 	}
 }

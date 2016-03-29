@@ -1,6 +1,8 @@
 
 package matrix;
 
+import static java.lang.Math.pow;
+
 import java.util.*;
 
 public class Matrix {
@@ -45,6 +47,39 @@ public class Matrix {
 		}
 	}
 
+	
+
+	public static Matrix fromRows(Vector v1, Vector... vectors) {
+		int n = v1.nDim();
+		Matrix mat = new Matrix(v1);
+		for (Vector vec : vectors) {
+			if (vec.nDim() == n) {
+				mat.extendRows(vec);
+			}
+		}
+		return mat;
+	}
+
+	public static Matrix fromColumns(Vector v1, Vector... vectors) {
+		int n = v1.nDim();
+		Matrix mat = new Matrix(v1);
+		for (Vector vec : vectors) {
+			if (vec.nDim() == n) {
+				mat.extendColumns(vec);
+			}
+		}
+		return mat;
+	}
+
+	public static Matrix unitMatrix(int n, int m) {
+		Matrix newM = new Matrix(n, m);
+		int k = Math.min(n, m);
+		for (int i = 0; i < k; i++) {
+			newM.setValue(i, i, 1);
+		}
+		return newM;
+	}
+	
 	public static void printM(Matrix mat) {
 		int n = mat.nDim();
 		int m = mat.mDim();
@@ -58,17 +93,27 @@ public class Matrix {
 		}
 		System.out.println("--------------------------------");
 	}
-
-	public static Matrix unitMatrix(int n, int m) {
-		Matrix newM = new Matrix(n, m);
-		int k = Math.min(n, m);
-		for (int i = 0; i < k; i++) {
-			newM.setValue(i, i, 1);
-		}
-		return newM;
-	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		int n = nDim();
+		int m = mDim();
+		for (int i = 0; i < n; i++) {
+			sb.append(" | ");
+			for (int j = 0; j < m; j++) {
+				// Bis auf 4 nachkommastellen exakt darstellen
+				sb.append(String.format("%+6.2f", getValue(i,j)));
+				//				sb.append(Math.floor(getValue(i, j) * 10000) / 10000);
+				sb.append(" | ");
+			}
+			sb.append("\n");
+		}
+		sb.append("--------------------------------");
+		return sb.toString();
+	}
 
+	
 	public double getValue(int n, int m) {
 		return this.values.get(n).get(m);
 	}
@@ -114,7 +159,7 @@ public class Matrix {
 		int m = this.mDim();
 		int mo = otherM.values.size();
 		if (m != mo) {
-			System.err.println("Those Matrices don't have the same size!");
+			System.err.println("Those Matrices don't have compatible size!");
 		}
 		int p = otherM.values.get(0).size();
 		Matrix newM = new Matrix(n, p);
@@ -180,23 +225,6 @@ public class Matrix {
 			}
 		}
 		return newM;
-	}
-
-	public double det() {
-		double sum = 0;
-
-		int n = this.nDim();
-		if (n != this.mDim()) {
-			System.err.println("This is no sqare Matrix");
-		}
-		if (n == 1) {
-			return this.getValue(0, 0);
-		}
-		for (int j = 0; j < n; j++) {
-			// Entwicklung nach der 1. Zeile
-			sum += (Math.pow(-1, j)) * this.removeNM(0, j).det() * this.getValue(0, j);
-		}
-		return sum;
 	}
 
 	public Matrix extendColumns(Matrix other) {
@@ -305,34 +333,16 @@ public class Matrix {
 		return nil;
 	}
 
-	public Matrix gElimination(Matrix solver) {
-		int n0 = solver.nDim();
-		int m0 = solver.mDim();
-		int n = Math.min(n0, m0);
-		for (int j = 0; j < n; j++) {
-			int diag = j + 1;
-			while (solver.getValue(j, j) == 0) {
-				solver = solver.switchRows(diag, j);
-				diag++;
-			}
-			solver = solver.multiplyRow(j, 1 / solver.getValue(j, j));
-			for (int i = 0; i < n0; i++) {
-				if (i != j) {
-					solver = solver.addTimesRow(j, i, -solver.getValue(i, j));
-				}
-			}
-		}
-		return solver;
+	public double det() {
+		return MatrixContext.det(this);
+	}
+	
+	public Matrix gElimination1() {
+		return MatrixContext.gElimination(this);
 	}
 
 	public Matrix invert() {
 		return MatrixContext.inverse(this);
-		// int n = this.nDim();
-		// if (this.det() == 0) {
-		// System.err.println("This Matrix can't be inverted");
-		// }
-		// Matrix solver = this.extendColumns(unitMatrix(n, n));
-		// return solver.gElimination(solver).returnColumns(n, 2 * n - 1);
 	}
 
 	public Vector lgsSolve(Vector v) {
@@ -341,49 +351,25 @@ public class Matrix {
 			System.err.println("The solving vector does not match this matrix!");
 		}
 		Matrix solver = this.extendColumns(v);
-		return (Vector) solver.gElimination(solver).returnColumns(n, n);
+		return (Vector) solver.gElimination1().returnColumns(n, n);
 	}
-
-	public static Matrix fromRows(Vector v1, Vector... vectors) {
-		int n = v1.nDim();
-		Matrix mat = new Matrix(v1);
-		for (Vector vec : vectors) {
-			if (vec.nDim() == n) {
-				mat.extendRows(vec);
+	
+	public Matrix adjunct(){
+		Matrix m1 = new Matrix(this);
+		int n = this.nDim();
+		int m = this.mDim();
+		Matrix m0 = new Matrix(n,m);
+		
+		for(int i = 0; i<n;i++){
+			for(int j = 0;j<m;j++){
+				m0.setValue(i, j, m1.removeNM(i, j).det()*pow(-1, i+j));
+				m1 = this;
 			}
 		}
-		return mat;
+		return m0;
 	}
-
-	public static Matrix fromColumns(Vector v1, Vector... vectors) {
-		int n = v1.nDim();
-		Matrix mat = new Matrix(v1);
-		for (Vector vec : vectors) {
-			if (vec.nDim() == n) {
-				mat.extendColumns(vec);
-			}
-		}
-		return mat;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		int n = nDim();
-		int m = mDim();
-		for (int i = 0; i < n; i++) {
-			sb.append(" | ");
-			for (int j = 0; j < m; j++) {
-				// Bis auf 4 nachkommastellen exakt darstellen
-				sb.append(Math.floor(getValue(i, j) * 10000) / 10000);
-				sb.append(" | ");
-			}
-			sb.append("\n");
-		}
-		sb.append("--------------------------------");
-		return sb.toString();
-	}
-
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
