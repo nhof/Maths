@@ -71,5 +71,9 @@ public class Vector extends Matrix {
 		return Math.acos(x);
 	}
 	
-	
+	public boolean linearIndependent(Vector...vectors){
+		Matrix mat = Matrix.fromColumns(this, vectors);
+		int n = Math.min(mat.nDim(), mat.mDim());
+		return mat.rank()==n;
+	}
 }

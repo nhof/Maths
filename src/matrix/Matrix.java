@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Matrix {
 	private final List<List<Double>> values;
-	
+
 	public Matrix(int nDim, int mDim) {
 		values = new ArrayList<>(nDim);
 		for (int i = 0; i < nDim; i++) {
@@ -47,8 +47,6 @@ public class Matrix {
 		}
 	}
 
-	
-
 	public static Matrix fromRows(Vector v1, Vector... vectors) {
 		int n = v1.nDim();
 		Matrix mat = new Matrix(v1);
@@ -79,7 +77,7 @@ public class Matrix {
 		}
 		return newM;
 	}
-	
+
 	public static void printM(Matrix mat) {
 		int n = mat.nDim();
 		int m = mat.mDim();
@@ -93,7 +91,7 @@ public class Matrix {
 		}
 		System.out.println("--------------------------------");
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -103,8 +101,8 @@ public class Matrix {
 			sb.append(" | ");
 			for (int j = 0; j < m; j++) {
 				// Bis auf 4 nachkommastellen exakt darstellen
-				sb.append(String.format("%+6.2f", getValue(i,j)));
-				//				sb.append(Math.floor(getValue(i, j) * 10000) / 10000);
+				sb.append(String.format("%+6.2f", getValue(i, j)));
+				// sb.append(Math.floor(getValue(i, j) * 10000) / 10000);
 				sb.append(" | ");
 			}
 			sb.append("\n");
@@ -113,7 +111,6 @@ public class Matrix {
 		return sb.toString();
 	}
 
-	
 	public double getValue(int n, int m) {
 		return this.values.get(n).get(m);
 	}
@@ -248,7 +245,6 @@ public class Matrix {
 		return newM;
 	}
 
-
 	public Matrix multiplyRow(int n, double factor) {
 		int m = this.mDim();
 		Matrix newM = new Matrix(this);
@@ -336,9 +332,21 @@ public class Matrix {
 	public double det() {
 		return MatrixContext.det(this);
 	}
-	
-	public Matrix gElimination1() {
+
+	public Matrix gElimination() {
 		return MatrixContext.gElimination(this);
+	}
+
+	public int rank() {
+		int n = Math.min(this.nDim(), this.mDim());
+		Matrix diagonal = this.gElimination();
+		int rank = 0;
+		for (int i = 0; i < n; i++) {
+			if (diagonal.getValue(i, i) != 0) {
+				rank++;
+			}
+		}
+		return rank;
 	}
 
 	public Matrix invert() {
@@ -351,25 +359,24 @@ public class Matrix {
 			System.err.println("The solving vector does not match this matrix!");
 		}
 		Matrix solver = this.extendColumns(v);
-		return (Vector) solver.gElimination1().returnColumns(n, n);
+		return (Vector) solver.gElimination().returnColumns(n, n);
 	}
-	
-	public Matrix adjunct(){
+
+	public Matrix adjunct() {
 		Matrix m1 = new Matrix(this);
 		int n = this.nDim();
 		int m = this.mDim();
-		Matrix m0 = new Matrix(n,m);
-		
-		for(int i = 0; i<n;i++){
-			for(int j = 0;j<m;j++){
-				m0.setValue(i, j, m1.removeNM(i, j).det()*pow(-1, i+j));
+		Matrix m0 = new Matrix(n, m);
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				m0.setValue(i, j, m1.removeNM(i, j).det() * pow(-1, i + j));
 				m1 = this;
 			}
 		}
 		return m0;
 	}
-	
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

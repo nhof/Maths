@@ -32,4 +32,5 @@ public class GElimination2 implements IGElim {
 		}
 		return solver;
 	}
+	
 }
