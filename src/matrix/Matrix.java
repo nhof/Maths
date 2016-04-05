@@ -212,18 +212,6 @@ public class Matrix {
 		return newM;
 	}
 
-	public Matrix scalMult(double scalar) {
-		int n = this.nDim();
-		int m = this.mDim();
-		Matrix newM = new Matrix(this);
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				newM.setValue(i, j, scalar * this.getValue(i, j));
-			}
-		}
-		return newM;
-	}
-
 	public Matrix extendColumns(Matrix other) {
 		int n = this.nDim();
 		int m0 = other.mDim();

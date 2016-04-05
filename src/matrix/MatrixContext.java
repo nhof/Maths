@@ -2,8 +2,9 @@ package matrix;
 
 import matrix.det.Det1;
 import matrix.gElimination.GElimination1;
-//import matrix.inverse.Inverse1;
-import matrix.inverse.Inverse2;
+//import matrix.gElimination.GElimination2;
+import matrix.inverse.Inverse1;
+//import matrix.inverse.Inverse2;
 import matrix.scalar.Scalar1;
 
 public class MatrixContext {
@@ -34,7 +35,7 @@ public class MatrixContext {
 	
 	public static void main(String... args) {
 		scalar = new Scalar1();
-		inverse = new Inverse2();
+		inverse = new Inverse1();
 		det = new Det1();
 		gElim = new GElimination1();
 	}

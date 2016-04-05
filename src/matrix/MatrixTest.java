@@ -1,7 +1,6 @@
 package matrix;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -186,7 +185,7 @@ public class MatrixTest {
 	public void nearlyTest() {
 		Matrix m0 = new Matrix(3, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8);
 		Matrix m1 = new Matrix(3, 3, 0, 1.001, 2.001, 3, 4, 5, 6, 7, 8);
-		assertTrue("should not be same", m1.equals(m0) == false);
+		assertFalse("should not be same", m1.equals(m0));
 		assertTrue("not same", m1.nearly(m1, 0.1));
 	}
 
@@ -194,14 +193,15 @@ public class MatrixTest {
 	public void invertTest() {
 		Matrix m0 = new Matrix(3, 3, 2, -1, 3, 7, 3, 0, -1, 2, -4);
 		Matrix m1 = new Matrix(3, 3, 12, -2, 9, -28, 5, -21, -17, 3, -13);
-		System.out.println(m0.invert());
-		System.out.println(m1);
+		//System.out.println(m0.invert());
+		//System.out.println(m1);
 		assertTrue("not same", m1.nearly(m0.invert(), 0.1));
 	}
 
 	@Test
-	public void invertingExample() {
-		Matrix m0 = new Matrix(4, 4, 0, 0, 1, 0, 0, -1, 0, -3, 1, 2, 0, 6, 0, 0, 0, 1);
-		System.out.println(m0.invert());
+	public void scalMultTest(){
+		Matrix m0 = new Matrix(3, 3, 2, -1, 3, 7, 3, 0, -1, 2, -4);
+		Matrix m1 = new Matrix(3, 3, 4, -2, 6,14, 6, 0, -2, 4, -8);
+		assertTrue("not same", m1.equals(m0.times(2)));
 	}
 }
