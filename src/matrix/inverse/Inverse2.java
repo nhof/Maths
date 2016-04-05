@@ -12,6 +12,6 @@ public class Inverse2 implements IInverse {
 		if ( d == 0) {
 			System.err.println("This Matrix can't be inverted");
 		}
-		return m.scalMult(1/d);
+		return m.times(1/d);
 	}
 }

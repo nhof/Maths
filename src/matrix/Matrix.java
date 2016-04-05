@@ -38,7 +38,9 @@ public class Matrix {
 		int i = 0;
 		int j = 0;
 		for (double d : ds) {
-			setValue(j, i, d);
+			if (i < m && j < n) {
+				setValue(j, i, d);
+			}
 			i++;
 			if (i == m) {
 				i = 0;
@@ -253,26 +255,30 @@ public class Matrix {
 
 	public Matrix setRow(int n, double... ds) {
 		int m = this.mDim();
-		if (m > ds.length) {
+		if (m != ds.length) {
 			System.err.println("This row can only have " + m + " entries.");
 		}
 		int i = 0;
 		for (double d : ds) {
-			this.setValue(n, i, d);
-			i++;
+			if (i < m) {
+				this.setValue(n, i, d);
+				i++;
+			}
 		}
 		return this;
 	}
 
 	public Matrix setColumn(int m, double... ds) {
 		int n = this.mDim();
-		if (n > ds.length) {
+		if (n != ds.length) {
 			System.err.println("This column can only have " + n + " entries.");
 		}
 		int i = 0;
 		for (double d : ds) {
-			this.setValue(i, m, d);
-			i++;
+			if (i < n) {
+				this.setValue(i, m, d);
+				i++;
+			}
 		}
 		return this;
 	}
@@ -347,7 +353,7 @@ public class Matrix {
 			System.err.println("The solving vector does not match this matrix!");
 		}
 		Matrix solver = this.extendColumns(v);
-		return (Vector) solver.gElimination().returnColumns(n, n);
+		return solver.gElimination().returnColumns(n, n).toVector();
 	}
 
 	public Matrix adjunct() {
@@ -395,5 +401,14 @@ public class Matrix {
 			}
 		}
 		return true;
+	}
+	
+	public Vector toVector(){
+		int n= this.nDim();
+		Vector v = new Vector(n);
+		for(int i = 0; i<n;i++){
+			v.setCoord(i, this.getValue(i, 0));
+		}
+		return v;
 	}
 }
