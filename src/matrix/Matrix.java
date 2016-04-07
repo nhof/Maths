@@ -50,13 +50,8 @@ public class Matrix {
 	}
 
 	public static Matrix fromRows(Vector v1, Vector... vectors) {
-		int n = v1.nDim();
-		Matrix mat = new Matrix(v1);
-		for (Vector vec : vectors) {
-			if (vec.nDim() == n) {
-				mat.extendRows(vec);
-			}
-		}
+		Matrix mat = fromColumns(v1, vectors);
+		mat = mat.transposed();
 		return mat;
 	}
 
@@ -65,7 +60,7 @@ public class Matrix {
 		Matrix mat = new Matrix(v1);
 		for (Vector vec : vectors) {
 			if (vec.nDim() == n) {
-				mat.extendColumns(vec);
+				mat = mat.extendColumns(vec);
 			}
 		}
 		return mat;

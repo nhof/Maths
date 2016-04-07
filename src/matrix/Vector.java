@@ -97,7 +97,6 @@ public class Vector extends Matrix {
 
 	public boolean linearIndependent(Vector... vectors) {
 		Matrix mat = Matrix.fromColumns(this, vectors);
-		int n = Math.min(mat.nDim(), mat.mDim());
-		return mat.rank() == n;
+		return mat.rank() == vectors.length+1;
 	}
 }

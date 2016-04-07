@@ -15,48 +15,6 @@ public class MatrixTest {
 		return ex;
 	}
 
-	public static Matrix ex3x3_indep() {
-		Matrix ex = new Matrix(3, 3);
-		ex.setValue(0, 0, 0);
-		ex.setValue(0, 1, 1);
-		ex.setValue(0, 2, 2);
-		ex.setValue(1, 0, 3);
-		ex.setValue(1, 1, 4);
-		ex.setValue(1, 2, 5);
-		ex.setValue(2, 0, 6);
-		ex.setValue(2, 1, 6);
-		ex.setValue(2, 2, 8);
-		return ex;
-	}
-
-	public static Matrix ex3x3_dep() {
-		Matrix ex = new Matrix(3, 3);
-		ex.setValue(0, 0, 2);
-		ex.setValue(0, 1, 2);
-		ex.setValue(0, 2, 2);
-		ex.setValue(1, 0, 1);
-		ex.setValue(1, 1, 1);
-		ex.setValue(1, 2, 1);
-		ex.setValue(2, 0, 0);
-		ex.setValue(2, 1, 1);
-		ex.setValue(2, 2, 2);
-		return ex;
-	}
-
-	public static Matrix jemal() {
-		Matrix ex = new Matrix(3, 3);
-		ex.setValue(0, 0, 2);
-		ex.setValue(0, 1, -1);
-		ex.setValue(0, 2, 3);
-		ex.setValue(1, 0, 7);
-		ex.setValue(1, 1, 3);
-		ex.setValue(1, 2, 0);
-		ex.setValue(2, 0, -1);
-		ex.setValue(2, 1, 2);
-		ex.setValue(2, 2, -4);
-		return ex;
-	}
-
 	@Before
 	public void setup() {
 		MatrixContext.main();
@@ -266,33 +224,33 @@ public class MatrixTest {
 	@Test
 	public void getCoordTest() {
 		Vector v0 = new Vector(3, 1, 2, 3);
-		assertTrue("not same", 1 == v0.getCoord(0));
+		assertEquals(1 ,v0.getCoord(0),0.1);
 	}
 	
 	@Test
 	public void getCoordTest2(){
 		Vector v0 = new Vector(3, 1, 2, 3);
-		assertTrue("not same", 0 == v0.getCoord(3));
+		assertEquals(0, v0.getCoord(3),0.1);
 	}
 
 	@Test
 	public void scalarPTest() {
 		Vector v0 = new Vector(3, 1, 2, 2);
 		Vector v1 = new Vector(3, 2, 1, -2);
-		assertTrue("not same", 0 == v0.scalarP(v1));
+		assertEquals(0, v0.scalarP(v1),0.1);
 	}
 
 	@Test
 	public void scalarP2Test() {
 		Vector v0 = new Vector(3, 1, 2, 2);
 		Vector v1 = new Vector(3, 2, 1, -2);
-		assertTrue("not same", 0 == v0.scalarP2(v1));
+		assertEquals(0, v0.scalarP2(v1),0.1);
 	}
 
 	@Test
 	public void getLengthTest() {
 		Vector v0 = new Vector(3, 2, 3, 6);
-		assertTrue("not same", 7 == v0.getLength());
+		assertEquals(7.0, v0.getLength(), 0.1);
 	}
 
 	@Test
@@ -314,19 +272,61 @@ public class MatrixTest {
 	public void angleTest(){
 		Vector v0 = new Vector(3,1,0,0);
 		Vector v1 = new Vector(3,0,1,0);
-		assertTrue("not same", Math.PI/2 ==v0.angleV(v1));
+		assertEquals(Math.PI/2, v0.angleV(v1),0.1);
+	}
+	
+	@Test
+	public void rankTest(){
+		Matrix m0 = new Matrix(3, 3, 1, -3, 1, 2, -6, 2, 0, 0, 5);
+		assertEquals(2, m0.rank());
+	}
+	
+	@Test
+	public void lgsSolve(){
+		Matrix m0 = new Matrix(2,2,1,1,1,2);
+		Vector v0 = new Vector(2,1,2);
+		Vector sol = new Vector(2,0,1);
+		assertTrue("not same", sol.equals(m0.lgsSolve(v0)));
 	}
 
-	// Vector v = new Vector(3);
-	// v.setCoord(0, 1);
-	// v.setCoord(1, 2);
-	// v.setCoord(2, 2);
-	// Matrix m0 = new Matrix (3,3,1,0,0,0,1,0,0,0,0.5);
-	// Vector v1 = new Vector(3);
-	// v1.setCoord(0, 1);
-	// v1.setCoord(1, 2);
-	// v1.setCoord(2, 4);
-	// System.out.println(m0.lgsSolve(v));
-	// assertTrue("not same", v1.nearly(m0.lgsSolve(v), 0.1));
+	@Test
+	public void fromColumnsTest(){
+		Vector v0 = new Vector(3,1,0,0);
+		Vector v1 = new Vector(3,1,1,2);
+		Matrix m0 = new Matrix(3,2,1,1,0,1,0,2);
+		assertTrue("not same", m0.equals(Matrix.fromColumns(v0, v1)));
+	}
+	
+	@Test
+	public void fromRowsTest(){
+		Vector v0 = new Vector(3,1,0,0);
+		Vector v1 = new Vector(3,1,1,2);
+		Matrix m0 = new Matrix(2,3,1,0,0,1,1,2);
+		assertTrue("not same", m0.equals(Matrix.fromRows(v0, v1)));
+	}
+	
+	@Test
+	public void linearIndepTest1(){
+		Vector v0 = new Vector(3,1,0,0);
+		Vector v1 = new Vector(3,1,1,1);
+		Vector v2 = new Vector(3,3,2,2);
+		assertFalse("not same", v0.linearIndependent(v1,v2));
+	}
+
+	@Test
+	public void linearIndepTest2(){
+		Vector v0 = new Vector(3,1,0,0);
+		Vector v1 = new Vector(3,1,1,1);
+		Vector v2 = new Vector(3,3,2,4);
+		assertTrue("not same", v0.linearIndependent(v1,v2));
+	}
+	
+	@Test
+	public void adjunctTest(){
+		Matrix m0 = new Matrix(3,3,1,0,0,0,2,3,0,3,4);
+		Matrix m1 = new Matrix(3,3,-1,0,0,0,4,-3,0,-3,2);
+		assertTrue("not same", m1.nearly(m0.adjunct(), 0.1));
+	}
+	
 
 }
