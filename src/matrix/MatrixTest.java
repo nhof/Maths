@@ -199,11 +199,11 @@ public class MatrixTest {
 		assertTrue("not same", m1.equals(m0.setRow(1, 1, 2, 3, 0)));
 		assertTrue("not same", m1.equals(m0.setRow(1, 1, 2, 3)));
 	}
-	
+
 	@Test
-	public void toVectorTest(){
-		Matrix m0 = new Matrix(3,3,1,2,3,4,5,6,7,8,9);
-		Vector v1 = new Vector(3,1,4,7);
+	public void toVectorTest() {
+		Matrix m0 = new Matrix(3, 3, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+		Vector v1 = new Vector(3, 1, 4, 7);
 		assertTrue("not same", v1.equals(m0.toVector()));
 	}
 
@@ -224,27 +224,27 @@ public class MatrixTest {
 	@Test
 	public void getCoordTest() {
 		Vector v0 = new Vector(3, 1, 2, 3);
-		assertEquals(1 ,v0.getCoord(0),0.1);
+		assertEquals(1, v0.getCoord(0), 0.1);
 	}
-	
+
 	@Test
-	public void getCoordTest2(){
+	public void getCoordTest2() {
 		Vector v0 = new Vector(3, 1, 2, 3);
-		assertEquals(0, v0.getCoord(3),0.1);
+		assertEquals(0, v0.getCoord(3), 0.1);
 	}
 
 	@Test
 	public void scalarPTest() {
 		Vector v0 = new Vector(3, 1, 2, 2);
 		Vector v1 = new Vector(3, 2, 1, -2);
-		assertEquals(0, v0.scalarP(v1),0.1);
+		assertEquals(0, v0.scalarP(v1), 0.1);
 	}
 
 	@Test
 	public void scalarP2Test() {
 		Vector v0 = new Vector(3, 1, 2, 2);
 		Vector v1 = new Vector(3, 2, 1, -2);
-		assertEquals(0, v0.scalarP2(v1),0.1);
+		assertEquals(0, v0.scalarP2(v1), 0.1);
 	}
 
 	@Test
@@ -264,69 +264,79 @@ public class MatrixTest {
 	@Test
 	public void getNormalTest() {
 		Vector v0 = new Vector(3, 1, 2, 2);
-		Vector n = new Vector(3,1.0/3.0,2.0/3.0,2.0/3.0);
-		assertTrue("not same", n.nearly(v0.getNormal(),0.1));
+		Vector n = new Vector(3, 1.0 / 3.0, 2.0 / 3.0, 2.0 / 3.0);
+		assertTrue("not same", n.nearly(v0.getNormal(), 0.1));
 	}
-	
+
 	@Test
-	public void angleTest(){
-		Vector v0 = new Vector(3,1,0,0);
-		Vector v1 = new Vector(3,0,1,0);
-		assertEquals(Math.PI/2, v0.angleV(v1),0.1);
+	public void angleTest() {
+		Vector v0 = new Vector(3, 1, 0, 0);
+		Vector v1 = new Vector(3, 0, 1, 0);
+		assertEquals(Math.PI / 2, v0.angleV(v1), 0.1);
 	}
-	
+
 	@Test
-	public void rankTest(){
+	public void rankTest() {
 		Matrix m0 = new Matrix(3, 3, 1, -3, 1, 2, -6, 2, 0, 0, 5);
 		assertEquals(2, m0.rank());
 	}
-	
+
 	@Test
-	public void lgsSolve(){
-		Matrix m0 = new Matrix(2,2,1,1,1,2);
-		Vector v0 = new Vector(2,1,2);
-		Vector sol = new Vector(2,0,1);
+	public void lgsSolve() {
+		Matrix m0 = new Matrix(2, 2, 1, 1, 1, 2);
+		Vector v0 = new Vector(2, 1, 2);
+		Vector sol = new Vector(2, 0, 1);
 		assertTrue("not same", sol.equals(m0.lgsSolve(v0)));
 	}
 
 	@Test
-	public void fromColumnsTest(){
-		Vector v0 = new Vector(3,1,0,0);
-		Vector v1 = new Vector(3,1,1,2);
-		Matrix m0 = new Matrix(3,2,1,1,0,1,0,2);
+	public void fromColumnsTest() {
+		Vector v0 = new Vector(3, 1, 0, 0);
+		Vector v1 = new Vector(3, 1, 1, 2);
+		Matrix m0 = new Matrix(3, 2, 1, 1, 0, 1, 0, 2);
 		assertTrue("not same", m0.equals(Matrix.fromColumns(v0, v1)));
-	}
-	
-	@Test
-	public void fromRowsTest(){
-		Vector v0 = new Vector(3,1,0,0);
-		Vector v1 = new Vector(3,1,1,2);
-		Matrix m0 = new Matrix(2,3,1,0,0,1,1,2);
-		assertTrue("not same", m0.equals(Matrix.fromRows(v0, v1)));
-	}
-	
-	@Test
-	public void linearIndepTest1(){
-		Vector v0 = new Vector(3,1,0,0);
-		Vector v1 = new Vector(3,1,1,1);
-		Vector v2 = new Vector(3,3,2,2);
-		assertFalse("not same", v0.linearIndependent(v1,v2));
 	}
 
 	@Test
-	public void linearIndepTest2(){
-		Vector v0 = new Vector(3,1,0,0);
-		Vector v1 = new Vector(3,1,1,1);
-		Vector v2 = new Vector(3,3,2,4);
-		assertTrue("not same", v0.linearIndependent(v1,v2));
+	public void fromRowsTest() {
+		Vector v0 = new Vector(3, 1, 0, 0);
+		Vector v1 = new Vector(3, 1, 1, 2);
+		Matrix m0 = new Matrix(2, 3, 1, 0, 0, 1, 1, 2);
+		assertTrue("not same", m0.equals(Matrix.fromRows(v0, v1)));
 	}
-	
+
 	@Test
-	public void adjunctTest(){
-		Matrix m0 = new Matrix(3,3,1,0,0,0,2,3,0,3,4);
-		Matrix m1 = new Matrix(3,3,-1,0,0,0,4,-3,0,-3,2);
+	public void linearIndepTest1() {
+		Vector v0 = new Vector(3, 1, 0, 0);
+		Vector v1 = new Vector(3, 1, 1, 1);
+		Vector v2 = new Vector(3, 3, 2, 2);
+		assertFalse("not same", v0.linearIndependent(v1, v2));
+	}
+
+	@Test
+	public void linearIndepTest2() {
+		Vector v0 = new Vector(3, 1, 0, 0);
+		Vector v1 = new Vector(3, 1, 1, 1);
+		Vector v2 = new Vector(3, 3, 2, 4);
+		assertTrue("not same", v0.linearIndependent(v1, v2));
+	}
+
+	@Test
+	public void adjunctTest() {
+		Matrix m0 = new Matrix(3, 3, 1, 0, 0, 0, 2, 3, 0, 3, 4);
+		Matrix m1 = new Matrix(3, 3, -1, 0, 0, 0, 4, -3, 0, -3, 2);
 		assertTrue("not same", m1.nearly(m0.adjunct(), 0.1));
 	}
-	
+
+	@Test
+	public void randomTest() {
+		Matrix m0 = Matrix.randMatrix(3, 3, 3);
+		System.out.println(m0);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+			assertTrue("not smaller", m0.getValue(i, j)<=2);
+			}
+		}
+	}
 
 }

@@ -75,6 +75,32 @@ public class Matrix {
 		return newM;
 	}
 
+	public static Matrix randMatrix(int n, int m, int range) {
+		Matrix newM = new Matrix(n, m);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				newM.setValue(i, j, (int) (Math.random() * range));
+			}
+		}
+		return newM;
+	}
+
+	public Matrix makeStochastic() {
+		int n = this.nDim();
+		int m = this.mDim();
+		Matrix mat0 = new Matrix(n, m);
+		for (int i = 0; i < n; i++) {
+			double sum = 0;
+			for (int j = 0; j < m; j++) {
+				sum += this.getValue(i, j);
+			}
+			for (int j = 0; j < m; j++) {
+				mat0.setValue(i, j, this.getValue(i, j) / sum);
+			}
+		}
+		return mat0;
+	}
+
 	public static void printM(Matrix mat) {
 		int n = mat.nDim();
 		int m = mat.mDim();
@@ -167,6 +193,15 @@ public class Matrix {
 			}
 		}
 		return newM;
+	}
+	
+	public Matrix matPow(int power){
+		if(power == 0){
+			return unitMatrix(this.nDim(), this.nDim());
+		}
+		else{
+			return this.matMult(this.matPow(power-1));
+		}
 	}
 
 	public Matrix transposed() {
@@ -397,11 +432,11 @@ public class Matrix {
 		}
 		return true;
 	}
-	
-	public Vector toVector(){
-		int n= this.nDim();
+
+	public Vector toVector() {
+		int n = this.nDim();
 		Vector v = new Vector(n);
-		for(int i = 0; i<n;i++){
+		for (int i = 0; i < n; i++) {
 			v.setCoord(i, this.getValue(i, 0));
 		}
 		return v;
