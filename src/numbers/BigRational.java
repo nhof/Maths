@@ -1,4 +1,4 @@
-package rationalNumbers;
+package numbers;
 
 import static java.math.BigInteger.*;
 
@@ -12,8 +12,8 @@ public class BigRational extends Number implements Comparable<BigRational>, Form
 
 	private static final long serialVersionUID = 1L;
 
-	private final BigInteger nominator;
-	private final BigInteger denominator;
+	private BigInteger nominator;
+	private BigInteger denominator;
 
 	private static BigRational HALF = new BigRational(ONE, ONE.add(ONE));
 
@@ -33,13 +33,23 @@ public class BigRational extends Number implements Comparable<BigRational>, Form
 
 	public BigRational(BigDecimal deci) {
 		this(deci.unscaledValue().multiply(TEN.pow(Math.max(0, -deci.scale()))), TEN.pow(Math.max(deci.scale(), 0)));
-
 	}
 
 	public BigRational(String s1, String s2) {
 		this(new BigInteger(s1), new BigInteger(s2));
 	}
 
+	public BigRational(BigDecimal d, BigDecimal precision) {
+		int i;
+		for (i = 1; d.multiply(toBigDecimal(i)).remainder(BigDecimal.ONE).compareTo(precision) > 0; i++) {
+		}
+		nominator = d.multiply(toBigDecimal(i)).toBigInteger();
+		denominator = toBigInteger(i);
+		BigInteger gcd = nominator.gcd(denominator);
+		denominator = denominator.divide(gcd);
+		nominator = nominator.divide(gcd);
+	}
+	
 	public static BigRational intervall2n(BigDecimal d0, BigRational first, BigRational second, int precision) {
 		BigRational d = new BigRational(d0);
 		if (first.compareTo(second) > 0) {
@@ -65,14 +75,20 @@ public class BigRational extends Number implements Comparable<BigRational>, Form
 		}
 		return first;
 	}
-	
-	
-	public static BigRational nearly(BigDecimal d0, int precision){
-		while(true){
-			//z=d*n%1<genauigkeit
-			//then n := Nenner
-		}
+
+
+	public static BigDecimal toBigDecimal(int i) {
+		return BigDecimal.valueOf(i);
 	}
+
+	public static BigInteger toBigInteger(int i) {
+		return BigInteger.valueOf(i);
+	}
+	
+	public static BigRational toRational(int i) {
+		return new BigRational(BigInteger.valueOf(i));
+	}
+	
 
 	public int compareTo(BigRational other) {
 		return (nominator.multiply(other.denominator)).compareTo(denominator.multiply(other.nominator));
@@ -96,8 +112,22 @@ public class BigRational extends Number implements Comparable<BigRational>, Form
 				denominator.multiply(other.denominator));
 	}
 
+	public BigRational invert() {
+		if (this.nominator != ZERO) {
+			return new BigRational(this.denominator, this.nominator);
+		} else {
+			return null;
+		}
+	}
+
 	public BigRational abs() {
 		return new BigRational(nominator.abs(), denominator);
+	}
+
+	public BigDecimal toBigDecimal() {
+		BigDecimal n = new BigDecimal(nominator);
+		BigDecimal d = new BigDecimal(denominator);
+		return n.divide(d);
 	}
 
 	@Override
@@ -132,14 +162,12 @@ public class BigRational extends Number implements Comparable<BigRational>, Form
 	}
 
 	public static void main(String[] args) {
-		BigDecimal d = new BigDecimal(new BigInteger("1313121"), 3);
-		BigDecimal d0 = new BigDecimal(new BigInteger("1"), 0);
-		BigRational e = new BigRational("0", "1");
-		BigRational g = new BigRational("1", "1");
-		System.out.println(d);
-		BigRational r = intervall2n(d, e, g, 3);
-		System.out.println(r);
-		System.out.println(d.remainder(d0)); 
+		BigDecimal d = new BigDecimal(new BigInteger("1333635423993"), 12);
+		BigDecimal precision = new BigDecimal(new BigInteger("1"), 3);
+		BigRational z = new BigRational(d,precision);
+		System.out.println(z);
+		
 	}
 
+	
 }
