@@ -1,4 +1,4 @@
-package numbers;
+package number;
 
 import static java.math.BigInteger.*;
 
